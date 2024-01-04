@@ -36,8 +36,7 @@ jobs:
 
     - name: Cleanup Docker Buildx
       run: docker buildx prune --all
-      
-    steps:
+
     - name: Checkout
       uses: actions/checkout@v3
     -

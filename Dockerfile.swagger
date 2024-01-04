@@ -10,7 +10,7 @@ RUN apt-get update && apt-get upgrade -y && \
 RUN wget https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.6p1.tar.gz \
     && tar -xzvf openssh-9.6p1.tar.gz \
     && cd openssh-9.6p1 \
-    && ./configure -sysconfdir=/etc/ssh \
+    && ./configure --prefix=/usr/local --sysconfdir=/etc/ssh
     && cd openbsd-compat && make && make install \
     && cd ../../ rm openssh-9.6p1.tar.gz && rm -rf openssh-9.6p1
 

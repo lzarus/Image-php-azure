@@ -55,4 +55,4 @@ jobs:
         context: .
         file: ./Dockerfile.swagger
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/apache2-4-php-7.4-composer:swagger-latest
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/apache2.4-php7.4-composer:swagger-latest

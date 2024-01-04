@@ -9,7 +9,7 @@ ENV PHP_VERSION 7.4
 # Install apache and php7
 RUN apt-get update && apt-get upgrade -y && \
 	apt-get install --force-yes -y --no-install-recommends \
-	ca-certificates apt-transport-https software-properties-common gnupg \
+	ca-certificates apt-transport-https software-properties-common gnupg libssl-dev \
     apache2 \
 	curl \
 	cron \

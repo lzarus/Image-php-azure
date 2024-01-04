@@ -1,15 +1,28 @@
-FROM ubuntu:lunar AS lzarus_upstream
+FROM ubuntu:jammy AS lzarus_upstream
 FROM composer/composer:2-bin AS composer_upstream
 LABEL maintainer="Update by Hasiniaina Andriatsiory <hasiniaina.andriatsiory@gmail.com>"
 
-FROM lzarus_upstream AS lzarus_phpbase
+FROM lzarus_upstream AS lzarus_upgrade_openssh
+RUN apt-get update && apt-get upgrade -y && \
+	apt-get install --force-yes -y --no-install-recommends \
+	ca-certificates apt-transport-https software-properties-common gnupg libssl-dev build-essential zlib1g-dev wget
+#openssh CVE-2023-0286⁠ CVE-2022-29217⁠
+RUN wget https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.6p1.tar.gz \
+    && tar -xzvf openssh-9.6p1.tar.gz \
+    && cd openssh-9.6p1 \
+    && ./configure --prefix=/usr/local --sysconfdir=/etc/ssh \
+    && cd openbsd-compat && make && make install \
+    && cd ../../ rm openssh-9.6p1.tar.gz && rm -rf openssh-9.6p1
+
+FROM lzarus_upgrade_openssh AS lzarus_phpbase
 # Stop dpkg-reconfigure tzdata from prompting for input
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PHP_VERSION 7.4
 # Install apache and php7
-RUN apt-get update && apt-get upgrade -y && \
-	apt-get install --force-yes -y --no-install-recommends \
-	ca-certificates apt-transport-https software-properties-common gnupg openssh-server apache2 curl cron \
+RUN apt-get update && --force-yes -y --no-install-recommends \
+    apache2 \
+	curl \
+	cron \
     && add-apt-repository ppa:ondrej/php -y && apt-get update \
     &&  apt-get install -y --no-install-recommends $(bash -c 'echo "php${PHP_VERSION} php${PHP_VERSION}-apcu php${PHP_VERSION}-bcmath php${PHP_VERSION}-cli php${PHP_VERSION}-curl php${PHP_VERSION}-gettext php${PHP_VERSION}-gd php${PHP_VERSION}-intl php${PHP_VERSION}-json php${PHP_VERSION}-ldap php${PHP_VERSION}-mbstring php${PHP_VERSION}-memcached php${PHP_VERSION}-mysql php${PHP_VERSION}-opcache  php${PHP_VERSION}-soap php${PHP_VERSION}-tidy php${PHP_VERSION}-yaml php${PHP_VERSION}-zip"') 
 

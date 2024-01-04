@@ -6,13 +6,13 @@ FROM lzarus_upstream AS lzarus_upgrade_openssh
 RUN apt-get update && apt-get upgrade -y && \
 	apt-get install --force-yes -y --no-install-recommends \
 	ca-certificates apt-transport-https software-properties-common gnupg libssl-dev build-essential zlib1g-dev wget
-#openssl CVE-2023-0286⁠ CVE-2022-29217⁠
+#openssh CVE-2023-0286⁠ CVE-2022-29217⁠
 RUN wget https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.6p1.tar.gz \
     && tar -xzvf openssh-9.6p1.tar.gz \
     && cd openssh-9.6p1 \
-    && ./configure --with-ssl-dir=/usr/bin/openssl -sysconfdir=/etc/ssh \
-    && make && make install \
-    && rm openssh-9.6p1.tar.gz && rm -rf openssh-9.6p1
+    && ./configure -sysconfdir=/etc/ssh \
+    && cd openbsd-compat && make && make install \
+    && cd ../../ rm openssh-9.6p1.tar.gz && rm -rf openssh-9.6p1
 
 FROM lzarus_upgrade_openssh AS lzarus_phpbase
 # Stop dpkg-reconfigure tzdata from prompting for input

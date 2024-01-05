@@ -27,12 +27,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker buildx build --push --build-arg PHP_VERSION=${{ env.PHP_VERSION }} --tag ghcr.io/${{ github.repository_owner }}/apache2-4-php${{ env.PHP_VERSION }}-composer:${{ github.sha }} --target lzarus_swagger .
-          docker buildx build --push --build-arg PHP_VERSION=${{ env.PHP_VERSION }} --tag ghcr.io/${{ github.repository_owner }}/apache2-4-php${{ env.PHP_VERSION }}-composer:swagger-latest --target lzarus_swagger .
+          docker buildx build --push --build-arg PHP_VERSION=${{ env.PHP_VERSION }} --tag ghcr.io/${{ github.repository_owner }}/apache-php-composer:${{ github.sha }} --target lzarus_swagger .
+          docker buildx build --push --build-arg PHP_VERSION=${{ env.PHP_VERSION }} --tag ghcr.io/${{ github.repository_owner }}/apache-php-composer:${{ env.PHP_VERSION }}-swagger --target lzarus_swagger .
 
       - name: Build and push Docker image for Azure target
         run: |
-          docker buildx build --push --build-arg PHP_VERSION=${{ env.PHP_VERSION }} --tag ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/apache2.4-php${{ env.PHP_VERSION }}-composer:latest --target lzarus_msaz .
+          docker buildx build --push --build-arg PHP_VERSION=${{ env.PHP_VERSION }} --tag ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/apache-php-composer:${{ env.PHP_VERSION }}-latest --target lzarus_msaz .
 
       - name: Cleanup Docker Buildx
         run: docker buildx prune --all
@@ -53,5 +53,16 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+          target: lzarus_swagger
+          build-args: PHP_VERSION=${{ env.PHP_VERSION }}
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/apache2.4-php${{ env.PHP_VERSION }}-composer:swagger-latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/apache-php-composer:${{ env.PHP_VERSION }}-swagger
+
+      - name: Build and push Docker image for Azure target on Docker Hub
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          target: lzarus_msaz
+          build-args: PHP_VERSION=${{ env.PHP_VERSION }}
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/apache-php-composer:${{ env.PHP_VERSION }}-latest

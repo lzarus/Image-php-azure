@@ -24,7 +24,7 @@ COPY sshd_config /etc/ssh/
 WORKDIR /home/site/wwwroot
 ENTRYPOINT ["/bin/init_container.sh"]
 #clean
-RUN apt-get purge gnupg && apt-get clean && rm -rf /var/cache/apt/lists
+RUN apt-get purge gnupg -y  && apt-get clean && rm -rf /var/cache/apt/lists
 
 
 FROM lzarus_phpbase AS lzarus_msaz
@@ -34,6 +34,10 @@ COPY core/ports.conf /etc/apache2/
 COPY core/envvars /etc/apache2/
 COPY init_container.sh /bin/
 COPY hostingstart.html /home/site/wwwroot/hostingstart.html
+# configure startup
+COPY sshd_config /etc/ssh/
+COPY ssh_setup.sh /tmp
+COPY startup.sh /tmp/
 RUN rm -f /etc/apache2/conf-enabled/other-vhosts-access-log.conf \
 	&& rm /etc/apache2/sites-enabled/000-default.conf && touch /var/log/cron.log \
 	&& a2enmod rewrite expires headers && service apache2 restart \
@@ -44,29 +48,16 @@ RUN rm -f /etc/apache2/conf-enabled/other-vhosts-access-log.conf \
     && echo "root:Docker!" | chpasswd \
     && echo "cd /home" >> /root/.bashrc \
     && ln -s /home/site/wwwroot /var/www/html \
-    && mkdir -p /opt/startup
-
-# configure startup
-COPY sshd_config /etc/ssh/
-COPY ssh_setup.sh /tmp
-COPY startup.sh /tmp/
-RUN mkdir -p /opt/startup \
-   && chmod -R +x /opt/startup \
-   && mv /tmp/startup.sh /opt/startup/ \
-   && chmod -R +x /opt/startup/startup.sh \
-   && chmod -R +x /tmp/ssh_setup.sh \
-   && (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null) \
-   && rm -rf /tmp/*
+#Startup
+    && mkdir -p /opt/startup \
+    && mkdir -p /opt/startup \
+    && chmod -R +x /opt/startup \
+    && mv /tmp/startup.sh /opt/startup/ \
+    && chmod -R +x /opt/startup/startup.sh \
+    && chmod -R +x /tmp/ssh_setup.sh \
+    && (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null) \
+    && rm -rf /tmp/*
 ENV PATH ${PATH}:/home/site/wwwroot
-RUN rm -f /etc/php/7.4/php.ini \
-   && { \
-                echo 'error_log=/dev/stderr'; \
-                echo 'display_errors=Off'; \
-                echo 'log_errors=On'; \
-                echo 'display_startup_errors=Off'; \
-                echo 'date.timezone=Europe/Paris'; \
-    } > /etc/php/7.4/php.ini
-
 FROM lzarus_msaz AS lzarus_swagger
 COPY core/swagger.conf /etc/apache2/sites-enabled/
 

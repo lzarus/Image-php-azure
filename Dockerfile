@@ -42,7 +42,6 @@ RUN rm -f /etc/apache2/conf-enabled/other-vhosts-access-log.conf \
 	&& a2enmod rewrite expires headers && service apache2 restart \
 	&& echo "syntax on\ncolorscheme desert"  > ~/.vimrc  \
     && chmod 755 /bin/init_container.sh \
-    && chmod 755 /usr/bin/tcpping \
     && mkdir -p /home/LogFiles/ \
     && echo "root:Docker!" | chpasswd \
     && echo "cd /home" >> /root/.bashrc \

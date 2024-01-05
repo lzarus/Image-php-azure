@@ -24,7 +24,7 @@ COPY sshd_config /etc/ssh/
 WORKDIR /home/site/wwwroot
 ENTRYPOINT ["/bin/init_container.sh"]
 #clean
-RUN apt-get purge gnupg libssl-dev build-essential zlib1g-dev wget && apt-get clean && rm -rf /var/cache/apt/lists
+RUN apt-get purge gnupg && apt-get clean && rm -rf /var/cache/apt/lists
 
 
 FROM lzarus_phpbase AS lzarus_msaz

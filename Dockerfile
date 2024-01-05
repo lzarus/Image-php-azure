@@ -11,7 +11,7 @@ RUN apt-get update && apt-get upgrade -y && \
 	apt-get install --force-yes -y --no-install-recommends \
 	ca-certificates apt-transport-https software-properties-common gnupg openssh-server apache2 curl cron libgd3
 RUN add-apt-repository ppa:ondrej/php 
-COPY lunarphp/source.list /etc/apt/sources.list.d/ondrej-ubuntu-php-lunar.list 
+COPY core/phpsource.list /etc/apt/sources.list.d/ondrej-ubuntu-php-lunar.list 
 RUN apt-get update \
     &&  apt-get install -y --no-install-recommends $(bash -c 'echo "php${PHP_VERSION} php${PHP_VERSION}-apcu php${PHP_VERSION}-bcmath php${PHP_VERSION}-cli php${PHP_VERSION}-curl php${PHP_VERSION}-gettext php${PHP_VERSION}-gd php${PHP_VERSION}-json php${PHP_VERSION}-mbstring php${PHP_VERSION}-memcached php${PHP_VERSION}-mysql php${PHP_VERSION}-opcache  php${PHP_VERSION}-soap php${PHP_VERSION}-tidy php${PHP_VERSION}-yaml php${PHP_VERSION}-zip"') 
 

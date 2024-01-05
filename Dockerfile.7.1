@@ -1,0 +1,89 @@
+FROM php:7.1.3-apache
+LABEL maintainer="Update by Hasiniaina Andriatsiory <hasiniaina.andriatsiory@gmail.com>"
+LABEL description="This image docker contains : php8.1, composer, apache2, cron and more extensions php."
+
+COPY sources.list /etc/apt/
+RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com AA8E81B4331F7F50
+#RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com 1587841717
+RUN echo "Acquire::Check-Valid-Until "false";" >> /etc/apt/apt.conf
+RUN apt-get update
+
+RUN apt-get update \
+   && apt-get install --force-yes -y --no-install-recommends \
+      lsb-release ca-certificates apt-transport-https software-properties-common \
+      libjpeg-dev \
+      libpq-dev \
+      libmcrypt-dev \
+      libldap2-dev \
+      libldb-dev \
+      libicu-dev \
+      libgmp-dev \
+      libmagickwand-dev \
+      imagemagick \
+      lftp \
+      libpng-dev \
+      zlib1g-dev \
+      libpspell-dev \
+      libcurl3-dev \ 
+      libbz2-dev \ 
+      libxml2-dev \
+      libz-dev \
+      libzip-dev \
+      libmemcached-dev \
+      libreadline-dev \
+      openssh-server \
+      apt-utils \
+      nano  \
+      vim \
+      unzip \
+      zip \
+      libonig-dev \
+      iproute2 \
+      iputils-ping \
+      pdftk \
+      expect \
+      curl \
+      net-tools \
+      dnsutils \
+      tcpdump \
+      tcptraceroute \
+      telnet \
+      iproute2 
+RUN docker-php-ext-install \
+      bcmath \
+      gd \
+      bz2 \
+      calendar \
+      ctype \
+      curl \
+      dom \
+      xml \
+      zip \
+      mysqli \
+      soap \
+      opcache \
+      sockets \
+      mbstring
+#other Package : gettext  exif ffi fileinfo filter ftp imagick imap  intl opcache pcntl pdo pdo_dblib pdo_firebird  shmop simplexml odbc sodium spl standard sysvmsg sysvsem sysvshm pdo_oci pdo_odbc pdo_pgsql pdo_sqlite pgsql  posix pspellreflection 
+
+RUN pecl install memcached redis
+RUN docker-php-ext-enable memcached
+RUN docker-php-ext-enable redis
+RUN docker-php-ext-install mcrypt
+#composer
+RUN  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --version=1.5.0 --filename=composer
+
+#Cron
+RUN apt-get -y install cron --force-yes
+RUN touch /var/log/cron.log
+
+#nodejs
+RUN curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+RUN echo "deb https://deb.nodesource.com/node_12.x jessie main" > /etc/apt/sources.list.d/nodesource.list && echo "deb-src https://deb.nodesource.com/node_12.x jessie main" >> /etc/apt/sources.list.d/nodesource.list
+RUN apt update -y && apt install nodejs -y --force-yes
+RUN npm install -g yarn
+
+EXPOSE 80
+
+WORKDIR /var/www/html/
+RUN a2enmod headers rewrite expires deflate

@@ -1,0 +1,67 @@
+name: CI/CD
+on:
+  push:
+    branches:
+      - main
+env:
+  PHP_VERSION: '7.4'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.MYGITHUB_TOKEN }}
+
+      - name: Build and push Docker image for Swagger target on GHCR
+        run: |
+          docker buildx build --push --build-arg PHP_VERSION=${{ env.PHP_VERSION }} --tag ghcr.io/${{ github.repository_owner }}/apache-php-composer:${{ github.sha }} --target lzarus_swagger .
+          docker buildx build --push --build-arg PHP_VERSION=${{ env.PHP_VERSION }} --tag ghcr.io/${{ github.repository_owner }}/apache-php-composer:${{ env.PHP_VERSION }}-swagger --target lzarus_swagger .
+
+      - name: Build and push Docker image for Azure target on GHCR
+        run: |
+          docker buildx build --push --build-arg PHP_VERSION=${{ env.PHP_VERSION }} --tag ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/apache-php-composer:${{ env.PHP_VERSION }}-latest --target lzarus_msaz .
+
+      - name: Cleanup Docker Buildx
+        run: docker buildx prune --all
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push Docker image for Swagger target on Docker Hub
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          target: lzarus_swagger
+          build-args: PHP_VERSION=${{ env.PHP_VERSION }}
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/apache-php-composer:${{ env.PHP_VERSION }}-swagger
+
+      - name: Build and push Docker image for Azure target on Docker Hub
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          target: lzarus_msaz
+          build-args: PHP_VERSION=${{ env.PHP_VERSION }}
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/apache-php-composer:${{ env.PHP_VERSION }}-latest

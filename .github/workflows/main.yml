@@ -32,8 +32,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker buildx build --push --tag ghcr.io/${{ github.repository_owner }}/apache2-4-php7.4-composer:${{ github.sha }} --target lzarus_swagger .
-          docker buildx build --push --tag ghcr.io/${{ github.repository_owner }}/apache2-4-php7.4-composer:swagger-latest --target lzarus_swagger .
+          docker buildx build --push --build-arg PHP_VERSION=${{ env.PHP_VERSION }} --tag ghcr.io/${{ github.repository_owner }}/apache2-4-php${{ env.PHP_VERSION }} -composer:${{ github.sha }} --target lzarus_swagger .
+          docker buildx build --push --build-arg PHP_VERSION=${{ env.PHP_VERSION }} --tag ghcr.io/${{ github.repository_owner }}/apache2-4-php${{ env.PHP_VERSION }} -composer:swagger-latest --target lzarus_swagger .
 
       - name: Build and push Docker image for Azure target
         run: |

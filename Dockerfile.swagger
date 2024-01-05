@@ -9,7 +9,7 @@ ENV PHP_VERSION 7.4
 # Install apache and php7
 RUN apt-get update && apt-get upgrade -y && \
 	apt-get install --force-yes -y --no-install-recommends \
-	ca-certificates apt-transport-https software-properties-common gnupg openssh-server apache2 curl cron
+	ca-certificates apt-transport-https software-properties-common gnupg openssh-server apache2 curl cron libgd3
 RUN add-apt-repository ppa:ondrej/php 
 COPY lunarphp/source.list /etc/apt/sources.list.d/ondrej-ubuntu-php-lunar.list 
 RUN apt-get update \

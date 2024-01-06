@@ -10,7 +10,6 @@ ARG PHP_VERSION 7.4
 RUN apt-get update && apt-get upgrade -y && \
 	apt-get install --force-yes -y --no-install-recommends \
 	ca-certificates apt-transport-https software-properties-common gnupg openssh-server apache2 curl cron libgd3 
-RUN apt-get install --force-yes -y --no-install-recommends libssl-dev python3-pip && pip3 install --upgrade cryptography==41.0.6
 RUN add-apt-repository ppa:ondrej/php 
 COPY core/sourcephp.list /etc/apt/sources.list.d/ondrej-ubuntu-php-lunar.list 
 RUN apt-get update \
@@ -25,7 +24,7 @@ COPY sshd_config /etc/ssh/
 WORKDIR /home/site/wwwroot
 ENTRYPOINT ["/bin/init_container.sh"]
 #clean
-RUN apt-get purge gnupg python3-pip -y  && apt-get clean && rm -rf /var/cache/apt/lists
+RUN apt-get purge gnupg -y  && apt-get clean && rm -rf /var/cache/apt/lists
 
 
 FROM lzarus_phpbase AS lzarus_msaz

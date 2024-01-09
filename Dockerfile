@@ -5,7 +5,7 @@ LABEL maintainer="Update by Hasiniaina Andriatsiory <hasiniaina.andriatsiory@gma
 FROM lzarus_upstream AS lzarus_phpbase
 # Stop dpkg-reconfigure tzdata from prompting for input
 ENV DEBIAN_FRONTEND=noninteractive
-ARG PHP_VERSION 7.4
+ARG PHP_VERSION
 # Install apache and php7
 RUN apt-get update && apt-get upgrade -y && \
 	apt-get install --force-yes -y --no-install-recommends \
@@ -13,7 +13,7 @@ RUN apt-get update && apt-get upgrade -y && \
 RUN add-apt-repository ppa:ondrej/php 
 COPY core/sourcephp.list /etc/apt/sources.list.d/ondrej-ubuntu-php-lunar.list 
 RUN apt-get update \
-    &&  apt-get install -y --no-install-recommends $(bash -c 'echo "php${PHP_VERSION} php${PHP_VERSION}-apcu php${PHP_VERSION}-bcmath php${PHP_VERSION}-cli php${PHP_VERSION}-curl php${PHP_VERSION}-gettext php${PHP_VERSION}-gd php${PHP_VERSION}-json php${PHP_VERSION}-mbstring php${PHP_VERSION}-memcached php${PHP_VERSION}-mysql php${PHP_VERSION}-opcache  php${PHP_VERSION}-soap php${PHP_VERSION}-tidy php${PHP_VERSION}-yaml php${PHP_VERSION}-zip"') 
+    &&  apt-get install -y --no-install-recommends $(bash -c 'echo "php${PHP_VERSION} php${PHP_VERSION}-apcu php${PHP_VERSION}-bcmath php${PHP_VERSION}-cli php${PHP_VERSION}-curl php${PHP_VERSION}-gettext php${PHP_VERSION}-gd php${PHP_VERSION}-json php${PHP_VERSION}-mbstring php${PHP_VERSION}-memcached php${PHP_VERSION}-mysql php${PHP_VERSION}-opcache  php${PHP_VERSION}-soap php${PHP_VERSION}-tidy php${PHP_VERSION}-xml php${PHP_VERSION}-yaml php${PHP_VERSION}-zip"') 
 
 #composer
 COPY --from=composer_upstream --link /composer /usr/bin/composer

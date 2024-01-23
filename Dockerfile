@@ -9,7 +9,7 @@ ARG PHP_VERSION
 # Install apache and php7
 RUN apt-get update && apt-get upgrade -y && \
 	apt-get install --force-yes -y --no-install-recommends \
-	ca-certificates apt-transport-https software-properties-common gnupg openssh-server apache2 curl cron libgd3 telnet
+	ca-certificates apt-transport-https software-properties-common gnupg openssh-server apache2 curl cron libgd3 telnet vim
 RUN add-apt-repository ppa:ondrej/php 
 COPY core/sourcephp.list /etc/apt/sources.list.d/ondrej-ubuntu-php-lunar.list 
 RUN apt-get update \

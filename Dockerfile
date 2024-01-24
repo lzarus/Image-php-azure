@@ -56,4 +56,5 @@ RUN rm -f /etc/apache2/conf-enabled/other-vhosts-access-log.conf \
 ENV PATH ${PATH}:/home/site/wwwroot
 FROM lzarus_msaz AS lzarus_swagger
 COPY core/swagger.conf /etc/apache2/sites-enabled/
-
+FROM lzarus_msaz AS lzarus_laravel
+COPY core/laravel.conf /etc/apache2/sites-enabled/

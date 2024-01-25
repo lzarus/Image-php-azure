@@ -1,4 +1,4 @@
-FROM 20-buster-slim AS lzarus_upstream
+FROM node:20-buster-slim AS lzarus_upstream
 LABEL maintainer="Update by Hasiniaina Andriatsiory <hasiniaina.andriatsiory@gmail.com>"
 
 FROM lzarus_upstream AS lzarus_node

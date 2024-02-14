@@ -1,4 +1,4 @@
-FROM ubuntu:mantic AS lzarus_upstream
+FROM ubuntu:lunar AS lzarus_upstream
 FROM composer/composer:2-bin AS composer_upstream
 LABEL maintainer="Update by Hasiniaina Andriatsiory <hasiniaina.andriatsiory@gmail.com>"
 
@@ -9,7 +9,7 @@ ARG PHP_VERSION
 # Install apache and php7
 RUN apt-get update && apt-get upgrade -y && \
 	apt-get install --force-yes -y --no-install-recommends \
-	ca-certificates apt-transport-https software-properties-common openssh-server apache2 curl cron libgd3 telnet vim \
+	ca-certificates apt-transport-https software-properties-common openssh-server apache2 curl cron gnupg libgd3 telnet vim traceroute \
     &&  apt-get install -y --no-install-recommends $(bash -c 'echo "php${PHP_VERSION} php${PHP_VERSION}-apcu php${PHP_VERSION}-bcmath php${PHP_VERSION}-cli php${PHP_VERSION}-curl php${PHP_VERSION}-gettext php${PHP_VERSION}-gd php${PHP_VERSION}-mbstring php${PHP_VERSION}-memcached php${PHP_VERSION}-mysql php${PHP_VERSION}-opcache  php${PHP_VERSION}-soap php${PHP_VERSION}-tidy php${PHP_VERSION}-xml php${PHP_VERSION}-yaml php${PHP_VERSION}-zip"') 
 RUN apt-get install php-pear && pecl install apcu
 RUN sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 768M/g' /etc/php/8.2/cli/php.ini && \

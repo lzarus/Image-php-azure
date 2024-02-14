@@ -6,7 +6,7 @@ FROM lzarus_upstream AS lzarus_phpbase
 # Stop dpkg-reconfigure tzdata from prompting for input
 ENV DEBIAN_FRONTEND=noninteractive
 ARG PHP_VERSION
-# Install apache and php7
+# Install apache and php
 RUN apt-get update && apt-get upgrade -y && \
 	apt-get install --force-yes -y --no-install-recommends \
 	ca-certificates apt-transport-https software-properties-common openssh-server apache2 curl cron gnupg libgd3 telnet vim traceroute

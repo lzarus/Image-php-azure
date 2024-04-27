@@ -1,4 +1,4 @@
-FROM ubuntu:lunar AS lzarus_upstream
+FROM ubuntu:mantic-20240416 AS lzarus_upstream
 FROM composer/composer:2-bin AS composer_upstream
 LABEL maintainer="Update by Hasiniaina Andriatsiory <hasiniaina.andriatsiory@gmail.com>"
 

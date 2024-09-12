@@ -31,6 +31,7 @@ RUN apt-get purge gnupg -y  && apt-get clean && rm -rf /var/cache/apt/lists
 FROM lzarus_phpbase AS lzarus_msaz
 COPY core/apache2.conf /etc/apache2/
 COPY core/ports.conf /etc/apache2/
+COPY core/security.conf /etc/apache2/sites-enabled/
 COPY core/envvars /etc/apache2/
 COPY init_container.sh /bin/
 COPY hostingstart.html /home/site/wwwroot/hostingstart.html
@@ -40,7 +41,7 @@ COPY ssh_setup.sh /tmp
 COPY startup.sh /tmp/
 RUN rm -f /etc/apache2/conf-enabled/other-vhosts-access-log.conf \
 	&& rm /etc/apache2/sites-enabled/000-default.conf && touch /var/log/cron.log \
-	&& a2enmod rewrite expires headers && service apache2 restart \
+	&& a2enmod rewrite expires headers proxy && service apache2 restart \
 	&& echo "syntax on\ncolorscheme desert"  > ~/.vimrc  \
     && chmod 755 /bin/init_container.sh \
     && mkdir -p /home/LogFiles/ \

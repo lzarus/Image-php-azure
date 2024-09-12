@@ -6,6 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: PHP
     env:
       PHP_VERSION: ${{ vars.PHP_VERSION }} 
 

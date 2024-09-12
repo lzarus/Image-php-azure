@@ -29,6 +29,9 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.MYGITHUB_TOKEN }}
 
+      - name: Check PHP Version
+        run: echo "PHP_VERSION=${{ env.PHP_VERSION }}"
+
       - name: Build and push Docker image for Swagger target on GHCR and Docker Hub
         run: |
           docker buildx build --push --build-arg PHP_VERSION=${{ env.PHP_VERSION }} \

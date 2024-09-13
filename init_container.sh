@@ -29,6 +29,6 @@ eval $(printenv | sed -n "s/^\([^=]\+\)=\(.*\)$/export \1=\2/p" | sed 's/"/\\\"/
 # starting sshd process
 service ssh start
 service cron start
-service php${PHP_VERSION}-fpm start
+service phpPHP_VERSION-fpm start
 startupCommandPath="/opt/startup/startup.sh"
 $startupCommandPath

@@ -35,6 +35,7 @@ COPY core/ports.conf /etc/apache2/
 COPY core/security.conf /etc/apache2/sites-enabled/
 COPY core/envvars /etc/apache2/
 COPY init_container.sh /bin/
+RUN sed -i "s/PHP_VERSION/${PHP_VERSION}/g" /bin/init_container.sh
 COPY hostingstart.html /home/site/wwwroot/hostingstart.html
 # configure startup
 COPY sshd_config /etc/ssh/

@@ -15,9 +15,8 @@ COPY core/sourcephp.list /etc/apt/sources.list.d/ondrej-ubuntu-php-lunar.list
 RUN apt-get update \
     &&  apt-get install -y --no-install-recommends $(bash -c 'echo "php${PHP_VERSION} php${PHP_VERSION}-fpm php${PHP_VERSION}-apcu php${PHP_VERSION}-bcmath php${PHP_VERSION}-cli php${PHP_VERSION}-curl php${PHP_VERSION}-gettext php${PHP_VERSION}-gd php${PHP_VERSION}-mbstring php${PHP_VERSION}-memcached php${PHP_VERSION}-mysql php${PHP_VERSION}-opcache  php${PHP_VERSION}-soap php${PHP_VERSION}-tidy php${PHP_VERSION}-xml php${PHP_VERSION}-yaml php${PHP_VERSION}-zip"') 
 RUN sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 768M/g' /etc/php/${PHP_VERSION}/cli/php.ini && \
-    sed -i 's/max_file_uploads = 20/max_file_uploads = 50/g' /etc/php/${PHP_VERSION}/cli/php.ini \
-    sed -i 's/max_execution_time = 30/max_execution_time = 60/g' /etc/php/${PHP_VERSION}/cli/php.ini \
-    sed -i 's/max_input_time = 60/max_input_time = 360/g' /etc/php/${PHP_VERSION}/cli/php.ini 
+    sed -i 's/max_file_uploads = 20/max_file_uploads = 50/g' /etc/php/${PHP_VERSION}/cli/php.ini
+    
 #composer
 COPY --from=composer_upstream --link /composer /usr/bin/composer
 ENV PORT 8080

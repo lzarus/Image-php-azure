@@ -44,7 +44,7 @@ COPY startup.sh /tmp/
 RUN rm -f /etc/apache2/conf-enabled/other-vhosts-access-log.conf \
 	&& rm /etc/apache2/sites-enabled/000-default.conf && touch /var/log/cron.log \
     && a2dismod mpm_prefork \
-	&& a2enmod mpm_event proxy_fcgi setenvif rewrite expires headers http2 && service apache2 restart && service php${PHP_VERSION}-fpm restart \
+	&& a2enmod mpm_event proxy_fcgi setenvif rewrite expires headers http2  proxy_http proxy_wstunnel && service apache2 restart && service php${PHP_VERSION}-fpm restart \
 	&& echo "syntax on\ncolorscheme desert"  > ~/.vimrc  \
     && chmod 755 /bin/init_container.sh \
     && mkdir -p /home/LogFiles/ \

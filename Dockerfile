@@ -13,7 +13,7 @@ ARG PHP_VERSION
 RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
     ca-certificates apt-transport-https software-properties-common \
-    openssh-server apache2 curl cron gnupg libgd3 zip git unzip nano && \
+    openssh-server apache2 curl cron gnupg libgd3 zip git unzip nano telnet && \
     rm -rf /var/lib/apt/lists/*
 
 RUN add-apt-repository ppa:ondrej/php 
@@ -32,11 +32,6 @@ RUN sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 768M/g' /etc/php/${
     sed -i 's/max_file_uploads = 20/max_file_uploads = 50/g' /etc/php/${PHP_VERSION}/cli/php.ini
 
 COPY --from=composer_upstream --link /composer /usr/bin/composer
-
-RUN groupadd -r web-user && useradd -r -g web-user -d /home/web-user -m -s /bin/bash web-user && \
-    mkdir -p /home/web-user && chown -R web-user:web-user /home/web-user /home/site/wwwroot
-
-USER web-user
 
 ENV PORT=8080
 ENV SSH_PORT=2222

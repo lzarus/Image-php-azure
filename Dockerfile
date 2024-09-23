@@ -33,13 +33,13 @@ RUN sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 768M/g' /etc/php/${
 
 COPY --from=composer_upstream --link /composer /usr/bin/composer
 
-RUN groupadd -r www-data && useradd -r -g www-data -d /home/www-data -m -s /bin/bash www-data && \
-    mkdir -p /home/www-data && chown -R www-data:www-data /home/www-data /home/site/wwwroot
+RUN groupadd -r web-user && useradd -r -g web-user -d /home/web-user -m -s /bin/bash web-user && \
+    mkdir -p /home/web-user && chown -R web-user:web-user /home/web-user /home/site/wwwroot
 
-USER www-data
+USER web-user
 
-ENV PORT 8080
-ENV SSH_PORT 2222
+ENV PORT=8080
+ENV SSH_PORT=2222
 
 EXPOSE 2222 8080
 
@@ -73,7 +73,7 @@ RUN chmod -R +x /tmp/ssh_setup.sh /tmp/startup.sh && \
     chmod -R +x /opt/startup/startup.sh && \
     /tmp/ssh_setup.sh && rm -rf /tmp/*
 
-ENV PATH ${PATH}:/home/site/wwwroot
+ENV PATH=${PATH}:/home/site/wwwroot
 FROM lzarus_msaz AS lzarus_swagger
 COPY core/swagger.conf /etc/apache2/sites-enabled/
 FROM lzarus_msaz AS lzarus_laravel

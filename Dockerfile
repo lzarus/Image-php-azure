@@ -53,17 +53,16 @@ COPY core/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf
 COPY core/envvars /etc/apache2/
 COPY init_container.sh /bin/
 COPY hostingstart.html /home/site/wwwroot/hostingstart.html
+COPY ssh_setup.sh /tmp/
+COPY startup.sh /tmp/
 
 RUN rm /etc/apache2/sites-enabled/000-default.conf && \
-    a2enmod rewrite expires headers http2 proxy_http proxy_wstunnel && \
+    a2enmod rewrite expires headers proxy && \
     service apache2 restart && \
     chmod 755 /bin/init_container.sh && \
     mkdir -p /home/LogFiles/ && \
-    ln -s /home/site/wwwroot /var/www/html
-
-COPY ssh_setup.sh /tmp/
-COPY startup.sh /tmp/
-RUN chmod -R +x /tmp/ssh_setup.sh /tmp/startup.sh && \
+    ln -s /home/site/wwwroot /var/www/html && \
+    chmod -R +x /tmp/ssh_setup.sh /tmp/startup.sh && \
     mkdir -p /opt/startup && mv /tmp/startup.sh /opt/startup/ && \
     chmod -R +x /opt/startup/startup.sh && \
     /tmp/ssh_setup.sh && rm -rf /tmp/*

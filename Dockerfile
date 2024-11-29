@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM ubuntu:lunar AS lzarus_upstream
+FROM ubuntu:jammy AS lzarus_upstream
 
 FROM composer/composer:2-bin AS composer_upstream
 LABEL maintainer="Update by Hasiniaina Andriatsiory <hasiniaina.andriatsiory@gmail.com>"
@@ -18,7 +18,7 @@ RUN apt-get update && apt-get upgrade -y && \
 
 RUN add-apt-repository ppa:ondrej/php 
 
-COPY core/sourcephp.list /etc/apt/sources.list.d/ondrej-ubuntu-php-lunar.list
+COPY core/sourcephp.list /etc/apt/sources.list.d/ondrej-ubuntu-php-jammy.list
 RUN apt-get update && apt-get install -y --no-install-recommends \
     php${PHP_VERSION} php${PHP_VERSION}-apcu php${PHP_VERSION}-bcmath \
     php${PHP_VERSION}-cli php${PHP_VERSION}-curl php${PHP_VERSION}-gettext \

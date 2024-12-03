@@ -6,7 +6,6 @@ LABEL maintainer="Update by Hasiniaina Andriatsiory <hasiniaina.andriatsiory@gma
 
 FROM lzarus_upstream AS lzarus_msaz
 
-
 # Configuration des variables d'environnement
 ENV DEBIAN_FRONTEND=noninteractive \
     PORT=8080 \
@@ -75,9 +74,12 @@ COPY init_container.sh /bin/
 COPY hostingstart.html /home/site/wwwroot/
 COPY ssh_setup.sh startup.sh /tmp/
 
-# Configuration du conteneur
-RUN chmod 755 /bin/init_container.sh && \
-    mkdir -p /home/LogFiles /opt/startup && \
+# Configuration du conteneur et SSH
+RUN mkdir -p /home/LogFiles /opt/startup && \
+    echo "root:Docker!" | chpasswd && \
+    echo "cd /home" >> /root/.bashrc && \
+    mkdir -p /var/run/sshd && \
+    chmod 755 /bin/init_container.sh && \
     rm -f /etc/apache2/sites-enabled/000-default.conf && \
     rm -f /etc/apache2/conf-enabled/other-vhosts-access-log.conf && \
     a2enmod rewrite expires headers http2 proxy_http proxy_wstunnel && \

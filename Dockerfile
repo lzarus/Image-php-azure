@@ -30,6 +30,7 @@ RUN apt-get update && apt-get upgrade -y && \
         unzip \
         nano \
         telnet \
+        traceroute && \
     add-apt-repository ppa:ondrej/php && \
     rm -rf /var/lib/apt/lists/*
 

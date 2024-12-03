@@ -4,7 +4,8 @@ FROM ubuntu:jammy AS lzarus_upstream
 FROM composer/composer:2-bin AS composer_upstream
 LABEL maintainer="Update by Hasiniaina Andriatsiory <hasiniaina.andriatsiory@gmail.com>"
 
-FROM lzarus_upstream AS lzarus_phpbase
+FROM lzarus_upstream AS lzarus_msaz
+
 
 # Configuration des variables d'environnement
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -97,8 +98,8 @@ ENV PATH=${PATH}:/home/site/wwwroot
 
 ENTRYPOINT ["/bin/init_container.sh"]
 
-FROM lzarus_phpbase AS lzarus_swagger
+FROM lzarus_msaz AS lzarus_swagger
 COPY core/swagger.conf /etc/apache2/sites-enabled/
 
-FROM lzarus_phpbase AS lzarus_laravel
+FROM lzarus_msaz AS lzarus_laravel
 COPY core/laravel.conf /etc/apache2/sites-enabled/

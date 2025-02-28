@@ -30,6 +30,13 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.MYGITHUB_TOKEN }}
 
+      - name: Log in to ACR
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ secrets.ACR_URL }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
       - name: Check PHP Version
         run: echo "PHP_VERSION=${{ env.PHP_VERSION }}"
 
@@ -38,19 +45,22 @@ jobs:
           docker buildx build --push --build-arg PHP_VERSION=${{ env.PHP_VERSION }} \
           -t ghcr.io/${{ github.repository_owner }}/apache-php-composer:${{ github.sha }} \
           -t ghcr.io/${{ github.repository_owner }}/apache-php-composer:${{ env.PHP_VERSION }}-swagger \
-          -t ${{ secrets.DOCKERHUB_USERNAME }}/apache-php-composer:${{ env.PHP_VERSION }}-swagger --target lzarus_swagger .
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/apache-php-composer:${{ env.PHP_VERSION }}-swagger \
+          -t ${{ secrets.ACR_URL }}/apache-php-composer:${{ env.PHP_VERSION }}-swagger --target lzarus_swagger .
 
       - name: Build and push Docker image for Azure target on GHCR and Docker Hub
         run: |
           docker buildx build --push --build-arg PHP_VERSION=${{ env.PHP_VERSION }} \
           -t ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/apache-php-composer:${{ env.PHP_VERSION }}-latest \
-          -t ${{ secrets.DOCKERHUB_USERNAME }}/apache-php-composer:${{ env.PHP_VERSION }}-latest --target lzarus_msaz .
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/apache-php-composer:${{ env.PHP_VERSION }}-latest \
+          -t ${{ secrets.ACR_URL }}/apache-php-composer:${{ env.PHP_VERSION }}-latest --target lzarus_msaz .
 
       - name: Build and push Docker image for framework laravel target on GHCR and Docker Hub
         run: |
           docker buildx build --push --build-arg PHP_VERSION=${{ env.PHP_VERSION }} \
           -t ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/apache-php-composer:${{ env.PHP_VERSION }}-laravel \
-          -t ${{ secrets.DOCKERHUB_USERNAME }}/apache-php-composer:${{ env.PHP_VERSION }}-laravel --target lzarus_laravel .
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/apache-php-composer:${{ env.PHP_VERSION }}-laravel  \
+          -t ${{ secrets.ACR_URL }}/apache-php-composer:${{ env.PHP_VERSION }}-laravel --target lzarus_laravel .
 
       - name: Cleanup Docker Buildx
         run: docker buildx prune --all
